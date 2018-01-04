@@ -1,0 +1,9 @@
+[Unit]
+Description=Generate bosh agent network
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/photon-bosh-agent-network.sh
+[Install]
+WantedBy=multi-user.target

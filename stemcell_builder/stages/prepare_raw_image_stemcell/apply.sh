@@ -11,4 +11,5 @@ pushd $work
 rm -f root.img
 ln ${stemcell_image_name} root.img
 tar zcf stemcell/image root.img
+chown photon:photon stemcell/image
 popd

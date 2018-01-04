@@ -13,6 +13,9 @@ DOCKER_IMAGE=${DOCKER_IMAGE:-bosh/$IMAGE_NAME}
 
 if [ $IMAGE_NAME == "os-image-stemcell-builder" ] ; then
   USER_OPTION="--user ubuntu "
+elif [ $IMAGE_NAME == "photon-os-image-stemcell-builder" ] ; then
+  USER_OPTION="--user photon "
+  #DOCKER_IMAGE=-ppadmavilasom/$IMAGE_NAME
 elif [ $IMAGE_NAME == "suse-os-image-stemcell-builder" ] ; then
   USER_OPTION="-e LOCAL_USER_ID=`id -u $USER`"
 fi

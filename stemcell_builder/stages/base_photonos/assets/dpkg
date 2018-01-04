@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ $1 == "-x" -a $3 == "utillocal/" ] ; then
+mkdir -p $3usr/bin
+cp /usr/bin/nsenter $3usr/bin
+fi

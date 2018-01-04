@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2009-2012 VMware, Inc.
 
+set -x
 set -e
 
 base_dir=$(readlink -nf $(dirname $0)/../..)
@@ -93,16 +94,19 @@ EOF
     fi
 
     # we use a random password to prevent user from editing the boot menu
-    pbkdf2_password=`run_in_chroot ${image_mount_point} "echo -e '${random_password}\n${random_password}' | grub2-mkpasswd-pbkdf2 | grep -Eo 'grub.pbkdf2.sha512.*'"`
-    echo "\
+    #pbkdf2_password=`run_in_chroot ${image_mount_point} "TERM=linux echo -e '${random_password}\n${random_password}' | grub2-mkpasswd-pbkdf2 | grep -Eo 'grub.pbkdf2.sha512.*'"`
+    #echo "\
 
-cat << EOF
-set superusers=vcap
-password_pbkdf2 vcap $pbkdf2_password
-EOF" >> ${image_mount_point}/etc/grub.d/00_header
+#cat << EOF
+#set superusers=vcap
+#password_pbkdf2 vcap $pbkdf2_password
+#EOF" >> ${image_mount_point}/etc/grub.d/00_header
 
+    add_on_exit "cat ${image_mount_point}/boot/grub2/grub.cfg.new"
+    #run_in_chroot ${image_mount_point} "sed -i 's/grub2-script-check//' /usr/sbin/grub2-mkconfig"
     # assemble config file that is read by grub2 at boot time
-    run_in_chroot ${image_mount_point} "GRUB_DISABLE_RECOVERY=true grub2-mkconfig -o /boot/grub2/grub.cfg"
+    #run_in_chroot ${image_mount_point} "sed -i '0,/.*TRANSLAT.*/s/.*TRANSLAT.*/cat \/boot\/grub2\/grub.cfg.new\n&/' /usr/sbin/grub2-mkconfig"
+    run_in_chroot ${image_mount_point} "GRUB_DISABLE_RECOVERY=true bash -x grub2-mkconfig -o /boot/grub2/grub.cfg"
 
     # set the correct root filesystem; use the ext2 filesystem's UUID
     device_uuid=$(dumpe2fs $loopback_dev | grep UUID | awk '{print $3}')

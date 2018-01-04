@@ -21,13 +21,15 @@ function enable {
 function run_in_chroot {
   local chroot=$1
   local script=$2
+  echo $script
 
   # Disable daemon startup
   disable $chroot/sbin/initctl
   disable $chroot/usr/sbin/invoke-rc.d
 
   # `unshare -f -p` to prevent `kill -HUP 1` from causing `init` to exit;
-  unshare -f -p -m $SHELL <<EOS
+  #unshare -f -p -m $SHELL <<EOS
+  unshare -f -p -m /bin/bash <<EOS
     mkdir -p $chroot/dev
     mount -n --bind /dev $chroot/dev
     mount -n --bind /dev/shm $chroot/dev/shm
@@ -36,7 +38,7 @@ function run_in_chroot {
     mkdir -p $chroot/proc
     mount -n --bind /proc $chroot/proc
 
-    chroot $chroot env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin http_proxy=${http_proxy:-} bash -e -c "$script"
+    chroot $chroot env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin http_proxy=${http_proxy:-} bash -x -e -c "$script"
 EOS
 
   # Enable daemon startup

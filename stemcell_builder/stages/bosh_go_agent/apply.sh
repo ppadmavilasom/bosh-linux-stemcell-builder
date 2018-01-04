@@ -32,7 +32,8 @@ else
   curl -L -o bosh-agent "https://s3.amazonaws.com/bosh-agent-binaries/bosh-agent-2.39.0-linux-amd64?versionId=Ppaj6Crj1Ifh89LWGB27XE7WfUCiBePE"
   echo "529f3903bc887eaae2d9038b96dfb9a8d136c32f8229e11322929eb4ec923cf5  bosh-agent" | shasum -a 256 -c -
 fi
-mv bosh-agent $chroot/var/vcap/bosh/bin/
+#copy photon's bosh-agent. keep till photon bosh-agent provider is upstreamed.
+cp $assets_dir/bosh-agent $chroot/var/vcap/bosh/bin/
 
 cp $assets_dir/bosh-agent-rc $chroot/var/vcap/bosh/bin/bosh-agent-rc
 cp $assets_dir/mbus/agent.{cert,key} $chroot/var/vcap/bosh/
@@ -57,6 +58,7 @@ chmod 600 $chroot/var/vcap/bosh/agent.key
 run_in_chroot $chroot "
 rm -f /etc/cron.deny
 rm -f /etc/at.deny
+touch /etc/crontab
 
 chmod 0770 /var/lock
 chown -h root:vcap /var/lock

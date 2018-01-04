@@ -14,3 +14,6 @@ source $base_dir/lib/prelude_bosh.bash
 # in the immediate release cycle after that.
 # Lock dowon /tmp and /var/tmp - jobs should use /var/vcap/data/tmp
 chmod 0770 $chroot/tmp $chroot/var/tmp
+
+rm -rf $chroot/etc/resolv.conf
+run_in_chroot ${chroot} "ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf"

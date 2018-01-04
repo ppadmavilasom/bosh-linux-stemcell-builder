@@ -1,0 +1,36 @@
+--- /sbin/ifup	2017-10-26 02:32:45.000000000 +0000
++++ ifup	2017-11-15 02:02:30.522175011 +0000
+@@ -39,12 +39,24 @@
+ manualfilename=`ls ${SYSTEMD_NETWORK_CONF_DIR}/*$interface*.network.manual 2>/dev/null`
+ if [[ -z  $manualfilename ]] ; then
+     print_message "Can not find the manual filename, let us search for the auto filename"
+-    filename=`ls ${SYSTEMD_NETWORK_CONF_DIR}/*$interface*.network 2>/dev/null`
++    filename=`ls ${SYSTEMD_NETWORK_CONF_DIR}/*en*.network 2>/dev/null`
+     [[ -z  $filename ]] && fail "Can not find network interface file"
+ else
+     filename=$manualfilename
+ fi
+ 
++ifcfgfile=/etc/sysconfig/network-scripts/ifcfg-$interface
++
++if [ -e $ifcfgfile ]
++then
++
++source /etc/sysconfig/network-scripts/ifcfg-$interface
++
++netmgr ip4_address --set --interface $interface --mode $BOOTPROTO --addr $IPADDR/19 --gateway $GATEWAY
++netmgr dns_servers --set --mode $BOOTPROTO --servers $DNS1
++
++address=$IPADDR
++else
+ # Trying to parse the address from the file
+ while read line
+ do 
+@@ -54,6 +66,7 @@
+         address=`echo $line | cut -d'=' -f2 | cut -d'/' -f1`
+     fi 
+ done < $filename
++fi
+ 
+ [[ -z  $address ]] && print_message "Did not find address in the configuration file, may be it's dhcp, will not check for duplicates"
+ 

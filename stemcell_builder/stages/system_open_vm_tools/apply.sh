@@ -7,7 +7,7 @@ source $base_dir/lib/prelude_apply.bash
 source $base_dir/lib/prelude_bosh.bash
 
 # Installation on CentOS requires v7
-pkg_mgr install open-vm-tools
+pkg_mgr --nogpgcheck install open-vm-tools
 
 # open-vm-tools installs unwanted fusermount binary
 run_in_chroot $chroot "rm -f /usr/bin/fusermount"

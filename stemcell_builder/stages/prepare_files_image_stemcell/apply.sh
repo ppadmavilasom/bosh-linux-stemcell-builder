@@ -12,4 +12,5 @@ chmod 1777 $chroot/tmp
 
 pushd $chroot
 tar zcf $work/stemcell/image .
+chown photon:photon $work/stemcell/image
 popd

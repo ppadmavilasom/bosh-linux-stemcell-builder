@@ -11,6 +11,9 @@ source $base_dir/lib/prelude_apply.bash
 if [ $(get_os_type) == "opensuse" ] ; then
   preferred=grub2
   fallback=grub
+elif [ $(get_os_type) == "photonos" ] ; then
+  preferred=grub2-pc
+  fallback=grub
 else
   preferred=grub
   fallback=grub2
