@@ -59,7 +59,12 @@ mount ${loopback_dev} ${image_mount_point}
 add_on_exit "umount ${image_mount_point}"
 
 # Copy root
-time rsync -aHA $chroot/ ${image_mount_point}
+rsync_options="-aHA"
+#photon does not support acl option
+if [ "${OS_TYPE}" == "photonos" ]; then
+  rsync_options="-aH"
+fi
+time rsync $rsync_options $chroot/ ${image_mount_point}
 
 if is_ppc64le; then
   # Add Xen hypervisor console support

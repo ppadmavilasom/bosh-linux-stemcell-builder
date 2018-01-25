@@ -30,6 +30,14 @@ elif [ "${stemcell_operating_system}" == "opensuse" ]; then
   # Export list in stemcell tarball
   cp $chroot/$bosh_dir/stemcell_rpm_qa.out $work/stemcell/stemcell_rpm_qa.txt
 
+elif [ "${stemcell_operating_system}" == "photonos" ]; then
+   # Create list of installed packages
+  run_in_bosh_chroot $chroot "rpm -qa > stemcell_rpm_qa.out"
+
+  # Export list in stemcell tarball
+  cp $chroot/$bosh_dir/stemcell_rpm_qa.out $work/stemcell/stemcell_rpm_qa.txt
+  chown photon:photon $work/stemcell/stemcell_rpm_qa.txt
+
 fi
 
 cp $chroot/var/vcap/bosh/etc/dev_tools_file_list $work/stemcell/dev_tools_file_list.txt

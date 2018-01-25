@@ -286,6 +286,8 @@ module Bosh::Stemcell
         :delay_monit_start,
         :system_grub,
         :cron_config,
+        :bosh_log_audit_start,
+        :enable_udf_module,
       ].flatten
     end
 
